@@ -1,0 +1,25 @@
+/* Premium UI clarity pass: consistent typography, contrast, and interaction states. */
+:root{--text-strong:#eceef1;--text-body:#b9c0c9;--text-muted:#8f98a4;--text-subtle:#69727e;--focus-ring:rgba(52,211,153,.42);--control-height:38px}
+html{font-size:16px;text-rendering:optimizeLegibility}
+body{font-family:Inter,"Segoe UI",system-ui,sans-serif;line-height:1.5}
+.main h1,.main h2,.main h3,.main b,.main strong{color:var(--text-strong)}
+.main p,.main td,.main .muted{color:var(--text-body)}
+.main small,.main .panel-title small,.main .crumb,.main .eyebrow{color:var(--text-muted)}
+.main th,.main .kpi>span,.main .bar-row{color:var(--text-subtle)}
+.main p,.main td,.main small{line-height:1.55}
+button,input,select,textarea{font-family:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,label:has(input:focus-visible){outline:3px solid var(--focus-ring);outline-offset:2px}
+.primary,.secondary,.ghost,.ack,.filter{min-height:var(--control-height)}
+.primary,.secondary,.ghost{font-size:12px;font-weight:650}
+.text-button{min-height:32px;font-size:12px;font-weight:650}
+.icon-btn{width:34px;height:34px;display:grid;place-items:center;border-radius:8px}
+.icon-btn:hover{background:rgba(255,255,255,.06);color:var(--text-strong)}
+.main input:not([type="file"]),.main select,.main textarea{color:var(--text-strong)}
+.main input::placeholder,.main textarea::placeholder{color:#69727e;opacity:1}
+.main label,.main .upload-box b{color:var(--text-strong)}
+.main .upload-box p{color:var(--text-muted)}
+/* The dashboard's contextual actions should remain available. */
+.strip-actions{display:flex!important}
+.health-panel .review-actions .primary{display:inline-flex!important}
+@media(max-width:760px){.page-content{padding:24px 16px 42px}.welcome-strip h2{line-height:1.2}.kpi{min-height:118px}.kpi strong{line-height:1.1}.notice{line-height:1.5}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}

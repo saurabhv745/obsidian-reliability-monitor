@@ -1,0 +1,8 @@
+node_modules/
+dist/
+backend/__pycache__/
+backend/venv/
+backend/*.log
+backend/reliability_monitor.db
+*.pyc
+.env
