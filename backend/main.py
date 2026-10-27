@@ -21,7 +21,8 @@ except ImportError:
     from backend.storage import init_storage, has_models, healthcheck as storage_healthcheck, save_model, save_snapshot, save_alert, save_record, load_records, load_state
 
 app = FastAPI(title="Obsidian Labs Reliability API")
-_cors_origins = [origin.strip() for origin in os.getenv('CORS_ORIGINS', 'http://localhost:5173,http://localhost:5174').split(',') if origin.strip()]
+_cors_value = os.getenv('CORS_ORIGINS', '').strip() or 'http://localhost:5173,http://localhost:5174,https://obsidian-reliability-ui.onrender.com'
+_cors_origins = [origin.strip() for origin in _cors_value.split(',') if origin.strip()]
 app.add_middleware(CORSMiddleware, allow_origins=_cors_origins, allow_methods=['GET', 'POST', 'PUT', 'OPTIONS'], allow_headers=['*'])
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 uploads = {}
