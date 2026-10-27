@@ -7,7 +7,7 @@ import './ui-clarity.css';
 import './reference-theme.css';
 import './modal.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/+$/, '');
 const FALLBACK_HEALTH = { score: 86, data_stability: 88, drift_risk: 18, performance: 94, input_quality: 91, status: 'REVIEW' };
 const FALLBACK_SNAPSHOTS = [{ reliability_score: 86, drift_score: .183, accuracy: 94.2, avg_confidence: .91 }];
 const FALLBACK_FAIRNESS = [{ feature:'gender', group:'Female', accuracy:92.1, positive_rate:.41, disparity_ratio:.88, flagged:false }, { feature:'gender', group:'Male', accuracy:93.4, positive_rate:.47, disparity_ratio:1, flagged:false }, { feature:'city_tier', group:'Tier 3', accuracy:81.2, positive_rate:.29, disparity_ratio:.74, flagged:true }];
