@@ -65,7 +65,7 @@ function App() {
   useEffect(() => {
     const closeMenus = (event) => {
       if (event.type === 'keydown' && event.key !== 'Escape') return;
-      if (event.type === 'click' && event.target.closest('.header-actions')) return;
+      if (event.type === 'click' && (event.target.closest('.header-actions') || event.target.closest('.profile-menu'))) return;
       setNotificationsOpen(false); setProfileOpen(false);
     };
     document.addEventListener('click', closeMenus);
@@ -136,7 +136,32 @@ function App() {
 }
 
 function NotificationMenu({ alerts, onOpenAlerts, onMarkAll }) { const unread = alerts.filter((alert) => alert.open); return <div className="popover notification-menu" role="dialog" aria-label="Notifications"><div className="popover-head"><div><b>Notifications</b><small>{unread.length} unread alert{unread.length === 1 ? '' : 's'}</small></div><button className="text-button" onClick={onMarkAll}>Mark all read</button></div>{unread.slice(0, 4).map((alert) => <button className="notification-item" key={alert.id} onClick={onOpenAlerts}><span className={`notification-dot ${alert.level.toLowerCase()}`}/><span><b>{alert.title}</b><small>{alert.text}</small></span><ChevronRight size={14}/></button>)}{!unread.length && <div className="empty-notifications"><Check size={18}/> You are all caught up.</div>}<button className="popover-footer" onClick={onOpenAlerts}>View alert center <ChevronRight size={14}/></button></div>; }
-function ProfileMenu({ profile, onSave, onSettings, onLogout }) { const [editing,setEditing] = useState(false); const [draft,setDraft] = useState(profile); const [message,setMessage] = useState(''); const save = () => { if (!draft.name.trim()) return setMessage('Name is required.'); onSave({...draft, name:draft.name.trim(), role:draft.role.trim() || 'Administrator'}); }; return <div className="popover profile-menu" role="menu" aria-label="Profile menu">{editing ? <><div className="popover-head"><b>Edit profile</b><button className="text-button" onClick={() => setEditing(false)}>Cancel</button></div><label className="field"><span>Name</span><input value={draft.name} onChange={(e) => setDraft({...draft,name:e.target.value})}/></label><label className="field"><span>Role</span><input value={draft.role} onChange={(e) => setDraft({...draft,role:e.target.value})}/></label>{message && <div className="profile-feedback">{message}</div>}<button className="primary small" onClick={save}><Check size={14}/> Save profile</button></> : <><div className="profile-summary"><div className="avatar">{profile.name.split(' ').map((part) => part[0]).join('').slice(0,2).toUpperCase()}</div><div><b>{profile.name}</b><small>{profile.role}</small></div></div>{message && <div className="profile-feedback"><Check size={13}/>{message}</div>}<button onClick={() => setEditing(true)}><UserRound size={15}/> Edit profile</button><button onClick={onSettings}><Settings size={15}/> Settings</button><div className="menu-divider"/><button className="danger-action" onClick={onLogout}><X size={15}/> Sign out</button></>}</div>; }
+function ProfileMenu({ profile, onSave, onSettings, onLogout }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(profile);
+  const [message, setMessage] = useState('');
+  const stop = (event) => event.stopPropagation();
+  const save = () => {
+    if (!draft.name.trim()) return setMessage('Name is required.');
+    onSave({ ...draft, name: draft.name.trim(), role: draft.role.trim() || 'Administrator' });
+  };
+  return <div className="popover profile-menu" role="menu" aria-label="Profile menu" onClick={stop} onMouseDown={stop}>
+    {editing ? <>
+      <div className="popover-head"><b>Edit profile</b><button type="button" className="text-button" onClick={() => setEditing(false)}>Cancel</button></div>
+      <label className="field"><span>Name</span><input autoFocus value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })}/></label>
+      <label className="field"><span>Role</span><input value={draft.role} onChange={(event) => setDraft({ ...draft, role: event.target.value })}/></label>
+      {message && <div className="profile-feedback">{message}</div>}
+      <button type="button" className="primary small" onClick={save}><Check size={14}/> Save profile</button>
+    </> : <>
+      <div className="profile-summary"><div className="avatar">{profile.name.split(' ').map((part) => part[0]).join('').slice(0,2).toUpperCase()}</div><div><b>{profile.name}</b><small>{profile.role}</small></div></div>
+      {message && <div className="profile-feedback"><Check size={13}/>{message}</div>}
+      <button type="button" onClick={() => setEditing(true)}><UserRound size={15}/> Edit profile</button>
+      <button type="button" onClick={onSettings}><Settings size={15}/> Settings</button>
+      <div className="menu-divider"/>
+      <button type="button" className="danger-action" onClick={onLogout}><X size={15}/> Sign out</button>
+    </>}
+  </div>;
+}
 
 function Brand({ onClose = () => {} }) { return <div className="brand"><div className="brand-mark"><Sparkles size={16}/></div><div><b>OBSIDIAN</b><span>LABS</span></div><button className="close-mobile" onClick={onClose}><X size={17}/></button></div>; }
 function Landing({ onLaunch, onDemo, onStory }) { return <div className="welcome"><div className="welcome-top"><Brand/><span className="powered">POWERED BY OBSIDIAN LABS</span></div><div className="hero"><div className="eyebrow"><span className="live-dot"/> RELIABILITY INTELLIGENCE PLATFORM</div><h1>Trust your models<br/><span>before they drift.</span></h1><p>Monitor changing data. Explain warning signs.<br/>Support better AI decisions.</p><div className="hero-actions"><button className="primary" onClick={onLaunch}>Launch Dashboard <ChevronRight size={17}/></button><button className="secondary" onClick={onDemo}><Play size={15}/> View Demo</button><button className="ghost" onClick={onStory}><Clock3 size={15}/> Run story</button></div><div className="hero-note"><ShieldCheck size={15}/> Human-in-the-loop by design <span/> Drift is an early warning, not a verdict.</div></div><div className="welcome-preview"><div className="preview-top"><span>MODEL RELIABILITY OVERVIEW</span><span className="green-label">● LIVE MONITORING</span></div><div className="preview-score"><div><small>RELIABILITY SCORE</small><strong>86<span>/100</span></strong><label><span className="dot green"/> Monitoring recommended</label></div><div className="preview-chart"><ResponsiveContainer width="100%" height={125}><AreaChart data={BASE_TREND}><Area type="monotone" dataKey="score" stroke="#34d399" fill="rgba(52,211,153,.1)" strokeWidth={2}/></AreaChart></ResponsiveContainer></div></div></div><footer>© 2026 Obsidian Labs · Princi Verma · Abhishek Yadav · Anshika Devi</footer></div>; }
